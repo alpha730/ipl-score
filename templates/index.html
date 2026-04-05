@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPL Score Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,49 +13,118 @@
         }
 
         :root {
-            --primary: #1a56db;
-            --primary-dark: #1e40af;
-            --secondary: #059669;
-            --danger: #dc2626;
-            --warning: #f59e0b;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: #334155;
+            --grass-dark: #1a2e1a;
+            --grass-medium: #243524;
+            --grass-light: #2d4a2d;
+            --stadium-cream: #f5f5dc;
+            --stadium-glow: #fffacd;
+            --cricket-red: #c41e3a;
+            --cricket-red-dark: #8b0000;
+            --wicket-silver: #c0c0c0;
+            --boundary-gold: #daa520;
+            --text-primary: #e8e8e0;
+            --text-secondary: #a0a090;
+            --border: rgba(218, 165, 32, 0.2);
+            --card-bg: rgba(26, 46, 26, 0.6);
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e1b4b 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--grass-dark);
             min-height: 100vh;
             color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 50% 0%, rgba(45, 74, 45, 0.4) 0%, transparent 60%),
+                radial-gradient(circle at 20% 80%, rgba(196, 30, 58, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(196, 30, 58, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 16px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(26, 86, 219, 0.3);
+            padding: 50px 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .cricket-ball {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: radial-gradient(circle at 30% 30%, var(--cricket-red), var(--cricket-red-dark));
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                inset -5px -5px 15px rgba(0,0,0,0.4),
+                0 5px 20px rgba(196, 30, 58, 0.3);
+        }
+
+        .cricket-ball::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--text-secondary);
+            transform: translateY(-50%);
+        }
+
+        .cricket-ball::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            bottom: 10%;
+            left: 50%;
+            width: 2px;
+            background: var(--text-secondary);
+            transform: translateX(-50%);
         }
 
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Cinzel', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--stadium-cream);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            margin-bottom: 12px;
         }
 
         header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        header .divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--boundary-gold), transparent);
+            margin: 20px auto 0;
         }
 
         .main-grid {
@@ -64,66 +134,91 @@
             margin-bottom: 30px;
         }
 
-        @media (max-width: 968px) {
+        @media (max-width: 900px) {
             .main-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass);
+            border-radius: 8px;
+            color: var(--boundary-gold);
+            font-size: 1.2rem;
         }
 
         .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card h2::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 2px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--stadium-cream);
+            letter-spacing: 2px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px 16px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            background: var(--bg-dark);
+            background: var(--glass);
             color: var(--text-primary);
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+            border-color: var(--boundary-gold);
+            background: rgba(218, 165, 32, 0.05);
+        }
+
+        .form-group select option {
+            background: var(--grass-dark);
+            color: var(--text-primary);
         }
 
         .form-row {
@@ -132,26 +227,59 @@
             gap: 15px;
         }
 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            background: var(--glass);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--stadium-cream);
+        }
+
+        .stat-item .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
         .btn {
             width: 100%;
-            padding: 15px 30px;
+            padding: 16px 30px;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, var(--cricket-red) 0%, var(--cricket-red-dark) 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(26, 86, 219, 0.4);
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(26, 86, 219, 0.5);
+            box-shadow: 0 6px 25px rgba(196, 30, 58, 0.4);
         }
 
         .btn-primary:active {
@@ -160,73 +288,96 @@
 
         .prediction-result {
             text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(26, 86, 219, 0.1) 100%);
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(196, 30, 58, 0.05) 100%);
             border-radius: 12px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--boundary-gold);
+            margin-top: 25px;
+        }
+
+        .prediction-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
         }
 
         .prediction-score {
-            font-size: 4rem;
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 10px 0;
+            color: var(--stadium-cream);
+            text-shadow: 0 0 30px rgba(218, 165, 32, 0.3);
+            line-height: 1;
+            margin: 15px 0;
         }
 
         .prediction-range {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-top: 10px;
         }
 
         .prediction-model {
             display: inline-block;
-            padding: 5px 15px;
-            background: var(--bg-dark);
+            padding: 6px 16px;
+            background: var(--glass);
             border-radius: 20px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 15px;
+            font-size: 0.75rem;
+            color: var(--boundary-gold);
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .model-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-top: 20px;
         }
 
         .model-card {
-            background: var(--bg-dark);
+            background: var(--glass);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .model-card:hover {
-            border-color: var(--primary);
+            border-color: var(--boundary-gold);
+            transform: translateY(-2px);
         }
 
         .model-card.best {
-            border-color: var(--secondary);
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%);
+            border-color: var(--boundary-gold);
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.15) 0%, rgba(218, 165, 32, 0.05) 100%);
         }
 
         .model-name {
             font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--text-primary);
+            margin-bottom: 12px;
+            color: var(--stadium-cream);
+            font-size: 0.95rem;
+        }
+
+        .model-name .badge {
+            float: right;
+            background: var(--boundary-gold);
+            color: var(--grass-dark);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .model-metric {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.9rem;
+            padding: 6px 0;
+            font-size: 0.85rem;
         }
 
         .model-metric span:first-child {
@@ -238,138 +389,36 @@
             font-weight: 500;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            background: var(--secondary);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .comparison-table th,
-        .comparison-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .comparison-table th {
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-        }
-
-        .comparison-table tr:hover {
-            background: var(--bg-dark);
-        }
-
-        .comparison-table tr.best-row {
-            background: rgba(5, 150, 105, 0.1);
-        }
-
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .status-good {
-            background: var(--secondary);
-            box-shadow: 0 0 10px var(--secondary);
-        }
-
-        .status-error {
-            background: var(--danger);
-            box-shadow: 0 0 10px var(--danger);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .error-message {
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid var(--danger);
-            color: #fca5a5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .info-box {
-            background: rgba(26, 86, 219, 0.1);
-            border: 1px solid var(--primary);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .info-box h4 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .info-box p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
-        }
-
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
+            gap: 5px;
+            margin-bottom: 25px;
+            background: var(--glass);
+            padding: 5px;
+            border-radius: 10px;
         }
 
         .tab {
-            padding: 10px 20px;
+            flex: 1;
+            padding: 12px 15px;
             background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1rem;
-            border-radius: 8px 8px 0 0;
-            transition: all 0.3s;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .tab:hover {
             color: var(--text-primary);
-            background: var(--bg-dark);
         }
 
         .tab.active {
-            color: var(--primary);
-            background: var(--bg-dark);
+            background: var(--grass-medium);
+            color: var(--stadium-cream);
         }
 
         .tab-content {
@@ -380,112 +429,244 @@
             display: block;
         }
 
-        .params-highlight {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
+        .info-box {
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 3px solid var(--boundary-gold);
         }
 
-        .param-badge {
-            background: var(--bg-dark);
-            padding: 8px 15px;
-            border-radius: 20px;
+        .info-box h4 {
+            color: var(--boundary-gold);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
             font-size: 0.85rem;
+            line-height: 1.7;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--glass);
+        }
+
+        .comparison-table tr.best-row {
+            background: rgba(218, 165, 32, 0.1);
+        }
+
+        .status-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: var(--glass);
+            border-radius: 10px;
             border: 1px solid var(--border);
         }
 
-        .param-badge span {
-            color: var(--primary);
-            font-weight: 600;
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
 
-        .current-score-display {
-            background: linear-gradient(135deg, rgba(26, 86, 219, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
-            border: 1px solid var(--primary);
-            border-radius: 12px;
+        .status-dot.online {
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .status-dot.offline {
+            background: var(--cricket-red);
+            box-shadow: 0 0 10px var(--cricket-red);
+        }
+
+        .status-info h4 {
+            color: var(--stadium-cream);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .status-info p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--boundary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid var(--cricket-red);
+            color: #f5a5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        footer .tech-stack {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .current-match {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
             padding: 20px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.08) 0%, rgba(196, 30, 58, 0.05) 100%);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+
+        .team {
             text-align: center;
         }
 
-        .current-score-display .score {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
+        .team-name {
+            font-weight: 600;
+            color: var(--stadium-cream);
+            font-size: 0.9rem;
         }
 
-        .current-score-display .label {
-            color: var(--text-secondary);
+        .vs {
+            font-family: 'Cinzel', serif;
+            color: var(--boundary-gold);
             font-size: 0.9rem;
-            margin-top: 5px;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🏏 IPL Score Predictor</h1>
-            <p>Predict match scores using core parameters: <strong>Runs</strong>, <strong>Overs</strong>, <strong>Wickets</strong></p>
+            <div class="cricket-ball"></div>
+            <h1>IPL Score Predictor</h1>
+            <p>Predict match scores using runs, overs & wickets</p>
+            <div class="divider"></div>
         </header>
 
         <div class="main-grid">
-            <!-- Prediction Form -->
             <div class="card">
-                <h2>Match Parameters</h2>
+                <div class="card-header">
+                    <div class="card-icon">🏏</div>
+                    <h2>Match Input</h2>
+                </div>
 
-                <div class="params-highlight">
-                    <div class="param-badge">🏏 <span>Runs</span> Scored</div>
-                    <div class="param-badge">📊 <span>Overs</span> Bowled</div>
-                    <div class="param-badge">💥 <span>Wickets</span> Lost</div>
+                <div class="current-match">
+                    <div class="team">
+                        <select id="batting_team" style="background: transparent; border: none; color: var(--stadium-cream); font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+                            <option value="">Batting</option>
+                        </select>
+                    </div>
+                    <span class="vs">VS</span>
+                    <div class="team">
+                        <select id="bowling_team" style="background: transparent; border: none; color: var(--stadium-cream); font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+                            <option value="">Bowling</option>
+                        </select>
+                    </div>
                 </div>
 
                 <form id="predictionForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="batting_team">Batting Team</label>
-                            <select id="batting_team" required>
-                                <option value="">Select Team</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="bowling_team">Bowling Team</label>
-                            <select id="bowling_team" required>
-                                <option value="">Select Team</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div class="form-group">
-                        <label for="city">City</label>
+                        <label for="city">Venue</label>
                         <select id="city" required>
                             <option value="">Select City</option>
                         </select>
                     </div>
 
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="value" id="runsDisplay">0</div>
+                            <div class="label">Runs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value" id="oversDisplay">0.0</div>
+                            <div class="label">Overs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value" id="wicketsDisplay">0</div>
+                            <div class="label">Wickets</div>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="runs">Current Runs (Score)</label>
+                            <label for="runs">Runs Scored</label>
                             <input type="number" id="runs" min="0" placeholder="e.g., 85" required>
                         </div>
                         <div class="form-group">
-                            <label for="wickets">Wickets Lost (0-10)</label>
+                            <label for="wickets">Wickets Lost</label>
                             <input type="number" id="wickets" min="0" max="10" placeholder="e.g., 3" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="overs">Overs Bowled (0-20)</label>
+                        <label for="overs">Overs Bowled</label>
                         <input type="number" id="overs" min="0" max="20" step="0.1" placeholder="e.g., 10.0" required>
-                        <small style="color: var(--text-secondary); font-size: 0.8rem;">
-                            Example: 10.3 means 10 overs and 3 balls
+                        <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 5px; display: block;">
+                            Format: 10.3 = 10 overs 3 balls
                         </small>
                     </div>
 
                     <div class="form-group">
-                        <label for="model">Prediction Model</label>
+                        <label for="model">Model</label>
                         <select id="model">
-                            <option value="auto">Auto (Best Model)</option>
+                            <option value="auto">Auto (Best)</option>
                             <option value="Linear Regression">Linear Regression</option>
                             <option value="Ridge Regression">Ridge Regression</option>
                             <option value="Lasso Regression">Lasso Regression</option>
@@ -494,35 +675,27 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">
-                        Predict Final Score
+                        Predict Score
                     </button>
                 </form>
 
                 <div id="predictionOutput"></div>
             </div>
 
-            <!-- Model Comparison -->
             <div class="card">
-                <h2>Model Performance</h2>
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h2>Model Performance</h2>
+                </div>
 
                 <div class="tabs">
-                    <button class="tab active" data-tab="overview">Overview</button>
+                    <button class="tab active" data-tab="overview">Models</button>
                     <button class="tab" data-tab="comparison">Comparison</button>
-                    <button class="tab" data-tab="analysis">Analysis</button>
+                    <button class="tab" data-tab="analysis">Info</button>
                 </div>
 
                 <div class="tab-content active" id="overview">
                     <div id="modelCards" class="model-grid"></div>
-
-                    <div class="info-box">
-                        <h4>Models Used</h4>
-                        <p>
-                            <strong>Linear Regression:</strong> Baseline model finding relationships between runs, overs, wickets and final score.<br><br>
-                            <strong>Ridge Regression:</strong> L2 regularization to prevent overfitting.<br><br>
-                            <strong>Lasso Regression:</strong> L1 regularization for feature selection.<br><br>
-                            <strong>Decision Tree:</strong> Non-linear splits based on feature thresholds.
-                        </p>
-                    </div>
                 </div>
 
                 <div class="tab-content" id="comparison">
@@ -541,42 +714,47 @@
 
                 <div class="tab-content" id="analysis">
                     <div class="info-box">
-                        <h4>Performance Metrics</h4>
+                        <h4>Metrics Explained</h4>
                         <p>
-                            <strong>MSE:</strong> Average squared prediction error.<br><br>
-                            <strong>RMSE:</strong> Typical error in runs (lower is better).<br><br>
-                            <strong>R²:</strong> How well model explains score variance (0-1, higher is better).
+                            <strong>MSE:</strong> Mean Squared Error - average squared difference<br><br>
+                            <strong>RMSE:</strong> Root MSE - typical error in runs<br><br>
+                            <strong>R²:</strong> Coefficient of determination - 0 to 1, higher is better
                         </p>
                     </div>
-
-                    <div class="info-box" style="margin-top: 15px; border-color: var(--secondary);">
-                        <h4 style="color: var(--secondary);">How It Works</h4>
+                    <div class="info-box" style="margin-top: 15px; border-color: var(--cricket-red);">
+                        <h4 style="color: var(--cricket-red);">How It Works</h4>
                         <p>
-                            Enter the <strong>current score</strong> (runs), <strong>overs bowled</strong>, and <strong>wickets lost</strong>. The model analyzes historical IPL data to predict the final innings score. Team strengths and venue are also considered.
+                            Enter current match state - runs scored, overs completed, wickets fallen. Our ML models predict the final innings total based on historical IPL patterns.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- System Status -->
         <div class="card">
-            <h2>System Status</h2>
+            <div class="card-header">
+                <div class="card-icon">⚡</div>
+                <h2>System Status</h2>
+            </div>
             <div id="systemStatus">
-                <p>Checking system status...</p>
+                <div class="status-card">
+                    <div class="status-dot offline"></div>
+                    <div class="status-info">
+                        <h4>Checking connection...</h4>
+                        <p>Attempting to connect to backend</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <footer>
-            <p>IPL Score Predictor | Built with NumPy, Flask & JavaScript</p>
-            <p style="margin-top: 10px; font-size: 0.85rem;">
-                Features: Runs | Overs | Wickets
-            </p>
+            <p>IPL Score Predictor</p>
+            <p class="tech-stack">NumPy ML • Flask API • Vanilla JS</p>
         </footer>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:5000/api';
+        const API_BASE = window.location.origin + '/api';
 
         const predictionForm = document.getElementById('predictionForm');
         const predictionOutput = document.getElementById('predictionOutput');
@@ -586,10 +764,22 @@
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
 
-        // Auto-calculate and display current score
         const runsInput = document.getElementById('runs');
         const oversInput = document.getElementById('overs');
         const wicketsInput = document.getElementById('wickets');
+        const runsDisplay = document.getElementById('runsDisplay');
+        const oversDisplay = document.getElementById('oversDisplay');
+        const wicketsDisplay = document.getElementById('wicketsDisplay');
+
+        function updateDisplays() {
+            runsDisplay.textContent = runsInput.value || '0';
+            oversDisplay.textContent = oversInput.value || '0.0';
+            wicketsDisplay.textContent = wicketsInput.value || '0';
+        }
+
+        runsInput.addEventListener('input', updateDisplays);
+        oversInput.addEventListener('input', updateDisplays);
+        wicketsInput.addEventListener('input', updateDisplays);
 
         async function loadDropdowns() {
             try {
@@ -633,7 +823,7 @@
                 }
             } catch (error) {
                 console.error('Error loading model comparison:', error);
-                modelCards.innerHTML = '<p class="error-message">Could not load model performance data.</p>';
+                modelCards.innerHTML = '<p class="error-message">Could not load model data.</p>';
             }
         }
 
@@ -645,12 +835,8 @@
                 html += `
                     <div class="model-card ${isBest ? 'best' : ''}">
                         <div class="model-name">
-                            ${name}
-                            ${isBest ? '<span class="badge">BEST</span>' : ''}
-                        </div>
-                        <div class="model-metric">
-                            <span>MSE</span>
-                            <span>${metrics.mse.toFixed(2)}</span>
+                            ${name.split(' ')[0]}
+                            ${isBest ? '<span class="badge">Best</span>' : ''}
                         </div>
                         <div class="model-metric">
                             <span>RMSE</span>
@@ -658,7 +844,7 @@
                         </div>
                         <div class="model-metric">
                             <span>R²</span>
-                            <span>${metrics.r2.toFixed(4)}</span>
+                            <span>${metrics.r2.toFixed(3)}</span>
                         </div>
                     </div>
                 `;
@@ -675,12 +861,9 @@
                 const isBest = name === bestModelName;
                 html += `
                     <tr class="${isBest ? 'best-row' : ''}">
-                        <td>
-                            ${name}
-                            ${isBest ? '<span class="badge" style="margin-left: 8px;">BEST</span>' : ''}
-                        </td>
-                        <td>${metrics.mse.toFixed(4)}</td>
-                        <td>${metrics.rmse.toFixed(4)}</td>
+                        <td>${name}</td>
+                        <td>${metrics.mse.toFixed(2)}</td>
+                        <td>${metrics.rmse.toFixed(2)}</td>
                         <td>${metrics.r2.toFixed(4)}</td>
                     </tr>
                 `;
@@ -694,26 +877,28 @@
                 const res = await fetch(`${API_BASE}/health`);
                 const data = await res.json();
 
-                const statusHtml = `
-                    <p>
-                        <span class="status-indicator ${data.status === 'healthy' ? 'status-good' : 'status-error'}"></span>
-                        <strong>Backend Status:</strong> ${data.status === 'healthy' ? 'Connected' : 'Disconnected'}
-                    </p>
-                    <p style="margin-top: 10px; color: var(--text-secondary);">
-                        Models: ${data.models_loaded ? 'Loaded' : 'Not Loaded'}
-                    </p>
-                `;
+                const statusClass = data.status === 'healthy' ? 'online' : 'offline';
+                const statusText = data.status === 'healthy' ? 'Connected' : 'Disconnected';
+                const modelStatus = data.models_loaded ? 'Models Loaded' : 'Models Not Loaded';
 
-                systemStatus.innerHTML = statusHtml;
+                systemStatus.innerHTML = `
+                    <div class="status-card">
+                        <div class="status-dot ${statusClass}"></div>
+                        <div class="status-info">
+                            <h4>Backend: ${statusText}</h4>
+                            <p>${modelStatus}</p>
+                        </div>
+                    </div>
+                `;
             } catch (error) {
                 systemStatus.innerHTML = `
-                    <p>
-                        <span class="status-indicator status-error"></span>
-                        <strong>Backend Status:</strong> Cannot connect to server
-                    </p>
-                    <p class="error-message" style="margin-top: 10px;">
-                        Run: <code>python app.py</code>
-                    </p>
+                    <div class="status-card">
+                        <div class="status-dot offline"></div>
+                        <div class="status-info">
+                            <h4>Cannot Connect</h4>
+                            <p>Backend server not reachable</p>
+                        </div>
+                    </div>
                 `;
             }
         }
@@ -737,7 +922,7 @@
                 payload.model = selectedModel;
             }
 
-            predictionOutput.innerHTML = '<div class="prediction-result"><div class="loading"></div><p>Predicting...</p></div>';
+            predictionOutput.innerHTML = '<div class="prediction-result"><div class="loading"></div><p style="margin-top: 15px; color: var(--text-secondary);">Predicting...</p></div>';
 
             try {
                 const res = await fetch(`${API_BASE}/predict`, {
@@ -750,32 +935,22 @@
 
                 if (data.success) {
                     const { predicted_score, confidence_range, model_used } = data.prediction;
-                    const currentRuns = payload.runs;
 
                     predictionOutput.innerHTML = `
                         <div class="prediction-result">
-                            <p style="color: var(--text-secondary);">Current Score: ${currentRuns}</p>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Predicted Final Score</p>
+                            <div class="prediction-label">Predicted Final Score</div>
                             <div class="prediction-score">${Math.round(predicted_score)}</div>
-                            <p class="prediction-range">
+                            <div class="prediction-range">
                                 Range: ${Math.round(confidence_range.lower)} - ${Math.round(confidence_range.upper)} runs
-                            </p>
-                            <span class="prediction-model">Model: ${model_used}</span>
+                            </div>
+                            <span class="prediction-model">${model_used}</span>
                         </div>
                     `;
                 } else {
-                    predictionOutput.innerHTML = `
-                        <div class="error-message">
-                            <strong>Error:</strong> ${data.error || 'Unknown error'}
-                        </div>
-                    `;
+                    predictionOutput.innerHTML = `<div class="error-message">${data.error || 'Unknown error'}</div>`;
                 }
             } catch (error) {
-                predictionOutput.innerHTML = `
-                    <div class="error-message">
-                        <strong>Connection Error:</strong> Could not connect to API
-                    </div>
-                `;
+                predictionOutput.innerHTML = `<div class="error-message">Could not connect to API</div>`;
             }
         });
 

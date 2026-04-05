@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Score Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a56db;
+            --primary-dark: #1e40af;
+            --secondary: #059669;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(26, 86, 219, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(26, 86, 219, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(26, 86, 219, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .prediction-result {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(26, 86, 219, 0.1) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .prediction-score {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 10px 0;
+        }
+
+        .prediction-range {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .prediction-model {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--bg-dark);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 15px;
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .model-card {
+            background: var(--bg-dark);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: border-color 0.3s;
+        }
+
+        .model-card:hover {
+            border-color: var(--primary);
+        }
+
+        .model-card.best {
+            border-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%);
+        }
+
+        .model-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .model-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .model-metric span:first-child {
+            color: var(--text-secondary);
+        }
+
+        .model-metric span:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--secondary);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-dark);
+        }
+
+        .comparison-table tr.best-row {
+            background: rgba(5, 150, 105, 0.1);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-good {
+            background: var(--secondary);
+            box-shadow: 0 0 10px var(--secondary);
+        }
+
+        .status-error {
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .info-box {
+            background: rgba(26, 86, 219, 0.1);
+            border: 1px solid var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .info-box h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-dark);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            background: var(--bg-dark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .params-highlight {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .param-badge {
+            background: var(--bg-dark);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+        }
+
+        .param-badge span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .current-score-display {
+            background: linear-gradient(135deg, rgba(26, 86, 219, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .current-score-display .score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .current-score-display .label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏏 IPL Score Predictor</h1>
+            <p>Predict match scores using core parameters: <strong>Runs</strong>, <strong>Overs</strong>, <strong>Wickets</strong></p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Prediction Form -->
+            <div class="card">
+                <h2>Match Parameters</h2>
+
+                <div class="params-highlight">
+                    <div class="param-badge">🏏 <span>Runs</span> Scored</div>
+                    <div class="param-badge">📊 <span>Overs</span> Bowled</div>
+                    <div class="param-badge">💥 <span>Wickets</span> Lost</div>
+                </div>
+
+                <form id="predictionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="batting_team">Batting Team</label>
+                            <select id="batting_team" required>
+                                <option value="">Select Team</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bowling_team">Bowling Team</label>
+                            <select id="bowling_team" required>
+                                <option value="">Select Team</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <select id="city" required>
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="runs">Current Runs (Score)</label>
+                            <input type="number" id="runs" min="0" placeholder="e.g., 85" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="wickets">Wickets Lost (0-10)</label>
+                            <input type="number" id="wickets" min="0" max="10" placeholder="e.g., 3" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="overs">Overs Bowled (0-20)</label>
+                        <input type="number" id="overs" min="0" max="20" step="0.1" placeholder="e.g., 10.0" required>
+                        <small style="color: var(--text-secondary); font-size: 0.8rem;">
+                            Example: 10.3 means 10 overs and 3 balls
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model">Prediction Model</label>
+                        <select id="model">
+                            <option value="auto">Auto (Best Model)</option>
+                            <option value="Linear Regression">Linear Regression</option>
+                            <option value="Ridge Regression">Ridge Regression</option>
+                            <option value="Lasso Regression">Lasso Regression</option>
+                            <option value="Decision Tree">Decision Tree</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Predict Final Score
+                    </button>
+                </form>
+
+                <div id="predictionOutput"></div>
+            </div>
+
+            <!-- Model Comparison -->
+            <div class="card">
+                <h2>Model Performance</h2>
+
+                <div class="tabs">
+                    <button class="tab active" data-tab="overview">Overview</button>
+                    <button class="tab" data-tab="comparison">Comparison</button>
+                    <button class="tab" data-tab="analysis">Analysis</button>
+                </div>
+
+                <div class="tab-content active" id="overview">
+                    <div id="modelCards" class="model-grid"></div>
+
+                    <div class="info-box">
+                        <h4>Models Used</h4>
+                        <p>
+                            <strong>Linear Regression:</strong> Baseline model finding relationships between runs, overs, wickets and final score.<br><br>
+                            <strong>Ridge Regression:</strong> L2 regularization to prevent overfitting.<br><br>
+                            <strong>Lasso Regression:</strong> L1 regularization for feature selection.<br><br>
+                            <strong>Decision Tree:</strong> Non-linear splits based on feature thresholds.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="comparison">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>MSE</th>
+                                <th>RMSE</th>
+                                <th>R²</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparisonTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="tab-content" id="analysis">
+                    <div class="info-box">
+                        <h4>Performance Metrics</h4>
+                        <p>
+                            <strong>MSE:</strong> Average squared prediction error.<br><br>
+                            <strong>RMSE:</strong> Typical error in runs (lower is better).<br><br>
+                            <strong>R²:</strong> How well model explains score variance (0-1, higher is better).
+                        </p>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 15px; border-color: var(--secondary);">
+                        <h4 style="color: var(--secondary);">How It Works</h4>
+                        <p>
+                            Enter the <strong>current score</strong> (runs), <strong>overs bowled</strong>, and <strong>wickets lost</strong>. The model analyzes historical IPL data to predict the final innings score. Team strengths and venue are also considered.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="card">
+            <h2>System Status</h2>
+            <div id="systemStatus">
+                <p>Checking system status...</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>IPL Score Predictor | Built with NumPy, Flask & JavaScript</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">
+                Features: Runs | Overs | Wickets
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        const predictionForm = document.getElementById('predictionForm');
+        const predictionOutput = document.getElementById('predictionOutput');
+        const modelCards = document.getElementById('modelCards');
+        const comparisonTableBody = document.getElementById('comparisonTableBody');
+        const systemStatus = document.getElementById('systemStatus');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Auto-calculate and display current score
+        const runsInput = document.getElementById('runs');
+        const oversInput = document.getElementById('overs');
+        const wicketsInput = document.getElementById('wickets');
+
+        async function loadDropdowns() {
+            try {
+                const [teamsRes, citiesRes] = await Promise.all([
+                    fetch(`${API_BASE}/teams`),
+                    fetch(`${API_BASE}/cities`)
+                ]);
+
+                const teamsData = await teamsRes.json();
+                const citiesData = await citiesRes.json();
+
+                if (teamsData.success) {
+                    const batSelect = document.getElementById('batting_team');
+                    const bowlSelect = document.getElementById('bowling_team');
+
+                    teamsData.teams.forEach(team => {
+                        batSelect.innerHTML += `<option value="${team}">${team}</option>`;
+                        bowlSelect.innerHTML += `<option value="${team}">${team}</option>`;
+                    });
+                }
+
+                if (citiesData.success) {
+                    const citySelect = document.getElementById('city');
+                    citiesData.cities.forEach(city => {
+                        citySelect.innerHTML += `<option value="${city}">${city}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading dropdowns:', error);
+            }
+        }
+
+        async function loadModelComparison() {
+            try {
+                const res = await fetch(`${API_BASE}/comparison`);
+                const data = await res.json();
+
+                if (data.success) {
+                    renderModelCards(data.comparison, data.best_model);
+                    renderComparisonTable(data.comparison, data.best_model.name);
+                }
+            } catch (error) {
+                console.error('Error loading model comparison:', error);
+                modelCards.innerHTML = '<p class="error-message">Could not load model performance data.</p>';
+            }
+        }
+
+        function renderModelCards(comparison, bestModel) {
+            let html = '';
+
+            for (const [name, metrics] of Object.entries(comparison)) {
+                const isBest = name === bestModel.name;
+                html += `
+                    <div class="model-card ${isBest ? 'best' : ''}">
+                        <div class="model-name">
+                            ${name}
+                            ${isBest ? '<span class="badge">BEST</span>' : ''}
+                        </div>
+                        <div class="model-metric">
+                            <span>MSE</span>
+                            <span>${metrics.mse.toFixed(2)}</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>RMSE</span>
+                            <span>${metrics.rmse.toFixed(2)}</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>R²</span>
+                            <span>${metrics.r2.toFixed(4)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            modelCards.innerHTML = html;
+        }
+
+        function renderComparisonTable(comparison, bestModelName) {
+            let html = '';
+            const sortedModels = Object.entries(comparison).sort((a, b) => b[1].r2 - a[1].r2);
+
+            for (const [name, metrics] of sortedModels) {
+                const isBest = name === bestModelName;
+                html += `
+                    <tr class="${isBest ? 'best-row' : ''}">
+                        <td>
+                            ${name}
+                            ${isBest ? '<span class="badge" style="margin-left: 8px;">BEST</span>' : ''}
+                        </td>
+                        <td>${metrics.mse.toFixed(4)}</td>
+                        <td>${metrics.rmse.toFixed(4)}</td>
+                        <td>${metrics.r2.toFixed(4)}</td>
+                    </tr>
+                `;
+            }
+
+            comparisonTableBody.innerHTML = html;
+        }
+
+        async function checkSystemStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/health`);
+                const data = await res.json();
+
+                const statusHtml = `
+                    <p>
+                        <span class="status-indicator ${data.status === 'healthy' ? 'status-good' : 'status-error'}"></span>
+                        <strong>Backend Status:</strong> ${data.status === 'healthy' ? 'Connected' : 'Disconnected'}
+                    </p>
+                    <p style="margin-top: 10px; color: var(--text-secondary);">
+                        Models: ${data.models_loaded ? 'Loaded' : 'Not Loaded'}
+                    </p>
+                `;
+
+                systemStatus.innerHTML = statusHtml;
+            } catch (error) {
+                systemStatus.innerHTML = `
+                    <p>
+                        <span class="status-indicator status-error"></span>
+                        <strong>Backend Status:</strong> Cannot connect to server
+                    </p>
+                    <p class="error-message" style="margin-top: 10px;">
+                        Run: <code>python app.py</code>
+                    </p>
+                `;
+            }
+        }
+
+        predictionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const modelSelect = document.getElementById('model');
+            const selectedModel = modelSelect.value;
+
+            const payload = {
+                batting_team: document.getElementById('batting_team').value,
+                bowling_team: document.getElementById('bowling_team').value,
+                city: document.getElementById('city').value,
+                runs: parseInt(document.getElementById('runs').value),
+                overs: parseFloat(document.getElementById('overs').value),
+                wickets: parseInt(document.getElementById('wickets').value)
+            };
+
+            if (selectedModel !== 'auto') {
+                payload.model = selectedModel;
+            }
+
+            predictionOutput.innerHTML = '<div class="prediction-result"><div class="loading"></div><p>Predicting...</p></div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    const { predicted_score, confidence_range, model_used } = data.prediction;
+                    const currentRuns = payload.runs;
+
+                    predictionOutput.innerHTML = `
+                        <div class="prediction-result">
+                            <p style="color: var(--text-secondary);">Current Score: ${currentRuns}</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Predicted Final Score</p>
+                            <div class="prediction-score">${Math.round(predicted_score)}</div>
+                            <p class="prediction-range">
+                                Range: ${Math.round(confidence_range.lower)} - ${Math.round(confidence_range.upper)} runs
+                            </p>
+                            <span class="prediction-model">Model: ${model_used}</span>
+                        </div>
+                    `;
+                } else {
+                    predictionOutput.innerHTML = `
+                        <div class="error-message">
+                            <strong>Error:</strong> ${data.error || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                predictionOutput.innerHTML = `
+                    <div class="error-message">
+                        <strong>Connection Error:</strong> Could not connect to API
+                    </div>
+                `;
+            }
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDropdowns();
+            loadModelComparison();
+            checkSystemStatus();
+            setInterval(checkSystemStatus, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -196,8 +196,8 @@ MIT License
 
 ## Author
 
-IPL Prediction Team
+Aryan
 
 ---
 
-Built with ❤️ using NumPy and Flask
+Built with using NumPy and Flask

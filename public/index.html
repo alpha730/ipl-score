@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPL Score Predictor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -45,7 +48,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
+            background:
                 radial-gradient(ellipse at 50% 0%, rgba(45, 74, 45, 0.4) 0%, transparent 60%),
                 radial-gradient(circle at 20% 80%, rgba(196, 30, 58, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 80% 80%, rgba(196, 30, 58, 0.1) 0%, transparent 40%);
@@ -75,8 +78,8 @@
             background: radial-gradient(circle at 30% 30%, var(--cricket-red), var(--cricket-red-dark));
             border-radius: 50%;
             position: relative;
-            box-shadow: 
-                inset -5px -5px 15px rgba(0,0,0,0.4),
+            box-shadow:
+                inset -5px -5px 15px rgba(0, 0, 0, 0.4),
                 0 5px 20px rgba(196, 30, 58, 0.3);
         }
 
@@ -109,7 +112,7 @@
             color: var(--stadium-cream);
             letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             margin-bottom: 12px;
         }
 
@@ -146,7 +149,7 @@
             padding: 30px;
             border: 1px solid var(--border);
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .card-header {
@@ -529,7 +532,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .error-message {
@@ -591,6 +596,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -609,13 +615,15 @@
 
                 <div class="current-match">
                     <div class="team">
-                        <select id="batting_team" style="background: transparent; border: none; color: var(--stadium-cream); font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+                        <select id="batting_team"
+                            style="background: transparent; border: none; color: var(--stadium-cream); font-size: 0.9rem; font-weight: 600; cursor: pointer;">
                             <option value="">Batting</option>
                         </select>
                     </div>
                     <span class="vs">VS</span>
                     <div class="team">
-                        <select id="bowling_team" style="background: transparent; border: none; color: var(--stadium-cream); font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+                        <select id="bowling_team"
+                            style="background: transparent; border: none; color: var(--stadium-cream); font-size: 0.9rem; font-weight: 600; cursor: pointer;">
                             <option value="">Bowling</option>
                         </select>
                     </div>
@@ -658,7 +666,8 @@
                     <div class="form-group">
                         <label for="overs">Overs Bowled</label>
                         <input type="number" id="overs" min="0" max="20" step="0.1" placeholder="e.g., 10.0" required>
-                        <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 5px; display: block;">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 5px; display: block;">
                             Format: 10.3 = 10 overs 3 balls
                         </small>
                     </div>
@@ -724,7 +733,8 @@
                     <div class="info-box" style="margin-top: 15px; border-color: var(--cricket-red);">
                         <h4 style="color: var(--cricket-red);">How It Works</h4>
                         <p>
-                            Enter current match state - runs scored, overs completed, wickets fallen. Our ML models predict the final innings total based on historical IPL patterns.
+                            Enter current match state - runs scored, overs completed, wickets fallen. Our ML models
+                            predict the final innings total based on historical IPL patterns.
                         </p>
                     </div>
                 </div>
@@ -754,7 +764,7 @@
     </div>
 
     <script>
-        const API_BASE = 'https://YOUR-RENDER-APP.onrender.com/api';
+        const API_BASE = 'https://ipl-score-qswe.onrender.com';
 
         const predictionForm = document.getElementById('predictionForm');
         const predictionOutput = document.getElementById('predictionOutput');
@@ -972,4 +982,5 @@
         });
     </script>
 </body>
+
 </html>

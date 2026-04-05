@@ -40,8 +40,8 @@ env/
 *.ipynb
 
 # Models and Data
-models/*.pkl
 models/*.joblib
+models/evaluation_results.json
 data/*.csv
 data/*.xlsx
 *.h5
